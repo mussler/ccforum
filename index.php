@@ -13,7 +13,7 @@ if(!isset($_SESSION['cookie']) && empty($_SESSION['logged'])) {
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
-<title>Crash Course - Message Board v0.22</title>
+<title>Crash Course - Message Board v0.23</title>
 </head>
 <body>
 <div id="wrapper">
