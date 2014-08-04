@@ -2,5 +2,5 @@
  define('HOST', 'localhost');
  define('USER', 'root');
  define('UPWD', NULL);
- define('DBNAME', 'test');
+ define('DBNAME', 'ccforum');
 ?>
