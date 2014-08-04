@@ -14,6 +14,8 @@ if(!isset($_SESSION['cookie']) && empty($_SESSION['logged'])) {
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 <title>Crash Course - Message Board v0.22</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+<script src="js.js"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -99,12 +101,8 @@ display: block;"> </div>
 				goto defaultlabel;
 			}
 			break;
-			case 'edituser':
-			if(isset($_GET['uid'])) {
-				include('pages/ccedituser.php');
-			} else {
-				goto defaultlabel;
-			}
+			case 'panel':
+				include('pages/cccontrol.php');
 			break;
 			case 'users':
 			include('pages/ccusers.php');
@@ -128,7 +126,6 @@ display: block;"> </div>
   </section>
   <footer>&copy; 2014</footer>
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
-<script src="js.js"></script>
+
 </body>
 </html>
