@@ -1,0 +1,135 @@
+@charset "utf-8";
+@font-face {
+    font-family: 'qs';
+	src: url('fonts/quicksand-regular-webfont.eot');
+    src: url('fonts/quicksand-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/quicksand-regular-webfont.woff') format('woff'),
+         url('fonts/quicksand-regular-webfont.ttf') format('truetype'),
+         url('fonts/quicksand-regular-webfont.svg#quicksandregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+#loginbox a {
+	color: #1a5076;
+}
+body {
+	background-color: #afc3c1;
+	font: 600 12px/14px "qs", "Verdana", sans-serif;
+
+}
+#wrapper {
+	width: 960px;
+	margin: 0 auto;
+}
+#phpdiv {
+	border: 2px black solid;
+	border-radius: 15px;
+	width: calc(100% - 2em);
+	min-height: 350px;
+	color: #999;
+	font: 400 12px/14px monospace;
+	background: #FFF;
+	padding: 15px;
+}
+code {
+	font: 600 14px/16px monotype;
+}
+table {
+	margin-top: 2em;
+	border: 2px solid gray;
+	display: inline-table;
+	margin-right: 3em;
+}
+tr:first-of-type {
+	font-weight: 900;
+	color: #666;
+}
+td {
+	min-width: 150px;
+	border: 1px solid black;
+}
+.colored {
+	font-weight: 900;
+	color:#F0F;
+}
+
+/* Login Box */
+#logbox {
+	position: fixed;
+top: 1em;
+left: calc(100% - 20em);
+width: auto;
+height: auto;
+border-radius: 15px;
+background: #ff9c68;
+}
+
+.form input[type="text"], input[type="password"], input[type="email"]{
+	border-radius: 12px;
+	width: 6em;
+	padding: 0.4em;
+	margin: 0.2em 0.5em 0.2em;
+	float: left;
+}
+
+.form input[type="submit"] {
+	border-radius: 12px;
+margin: 0.1em 0.6em;
+	float: left;
+}
+.form2 {
+	float: left;
+}
+.form2 input{
+	float: left;
+	clear: both;
+	display: block;
+	width: auto !important;
+}
+.form2 textarea {
+	float: left;
+	clear: both;
+	width: auto;
+	border-radius: 12px;
+	padding: 0.1em 0.6em;
+}
+.form2 input:after
+{
+    content: "q ";
+    display: block;
+    clear: both; /* if you need to break floating elements */
+}
+#loginform span {
+margin: 0.2em;
+float: left;
+}
+
+#logbox p {
+width: 100%;
+text-align: center;
+margin: 0.4em;
+}
+.red {
+	color: #f25a43;
+}
+input[type="submit"], input[type="checkbox"], input[type="button"], input[type="date"], input[type="file"], input[type="radio"] {
+	background-color: #afc3c1;
+}
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="search"]{
+}
+input:valid {
+}
+input:invalid {
+}
+
+.clearfix {
+	clear: both;
+}
+
+.pure-menu.pure-menu-open, .pure-menu.pure-menu-horizontal li .pure-menu-children {
+	background: none !important;
+}
+.pure-menu li a:hover {
+	border-radius: 12px;
+}
