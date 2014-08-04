@@ -1,4 +1,5 @@
 <?php
+error_reporting(-1);
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -71,7 +72,7 @@ function loadPosts() { // Displays posts, only first posts in thread
 		$s = sprintf($sql2, $row[0]);
 		$query2 = sendQuery($s);
 		$row2 = $query2->fetch_row();
-		printf("<li><h4><a href='index.php?loc=showpost&pa=%s&pd=%s'>%s</a></h4><span class='postauthor'><i>Posted by: </i><b>%s</b>.<br><i>Date added: </i><b>%s.</b></li>", $row[0],$row[1], $row[3], $row2[0], $row[1] );
+		printf("<li><h4><a href='index.php?loc=showpost&pa=%s&pd=%s'>%s</a></h4><span class='postauthor'><i>Posted by: </i><b>%s</b>.<br><i>Date added: </i><b>%s.</b></li>", $row[0],$row[1], $row[3], $row2[0], date("jS F Y, H:i", strtotime($row[1])) );
 		
 	}
 	printf("</ul>");
@@ -88,7 +89,7 @@ function showPost($pa, $pd) { // Display post and call showThread
 	} else {
 	$rowP = $queryP->fetch_row();
 	$rowU = $queryU->fetch_row();
-	$result = sprintf("<ul><li><h3>%s</h3> posted by <b>%s</b> on %s <p>%s</p>", $rowP[3], $rowU[0], $rowP[1], $rowP[2]);
+	$result = sprintf("<ul><li><h3>%s</h3> posted by <b>%s</b> on %s <p>%s</p>", $rowP[3], $rowU[0], date("jS F Y, H:i", strtotime($rowP[1])), $rowP[2]);
 	if(isset($_SESSION['logged'])){
 	if($rowU[0] == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
 	$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $pa, $pd);
@@ -124,7 +125,7 @@ function showThread($pa, $pd) { //Recursive thread display.
 		$sqlU = sprintf("select alias from user where uid=%s", $row[0]);
 		$queryU = sendQuery($sqlU);
 		$rowU = $queryU->fetch_row();
-		$result = sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s <p>%s</p>", $row[3], $rowU[0], $row[1], $row[2]);
+		$result = sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s <p>%s</p>", $row[3], $rowU[0], date("jS F Y, H:i", strtotime($row[1])), $row[2]);
 		if(isset($_SESSION['logged'])){
 		if($rowU[0] == $_SESSION['logged'] || $_SESSION['type'] == 'A'){
 	$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $row[0], $row[1]);
@@ -173,9 +174,10 @@ function editPost($pa, $pd, $pc, $pt) { // Updates the post, returns to index if
 	}
 }
 
-function deleteUser($uid, $ua) {
+function deleteUser($uid) {
 	
 	$sql = "DELETE FROM user WHERE uid='$uid' "; // this part will delete data from database
+	$ua = getAlias($uid);
 	if(sendQuery($sql)) {
 		$string = "<script>alert('User Has been Deleted');";
 		if($_SESSION['type'] == 'A' && $_SESSION['logged'] != $ua) {
@@ -189,21 +191,27 @@ function deleteUser($uid, $ua) {
 	
 }
 
-function updateUser($uid, $ualias, $utype, $upwd=null) {
-	
-		$sql1 = sprintf("update user set alias='%s', type='%s' where uid='%s'", $ualias, $utype, $uid);
-		$sql2 = sprintf("update user set alias='%s', type='%s', pwd=sha1('%s') where uid='%s'", $ualias, $utype, $upwd, $uid);
-		
-		if($upwd != null) {
-			if(sendQuery($sql2)) {
-				echo "<script>alert('User has been updated'); location.assign('index.php?loc=users');</script>";
-			}
-		} else {
-		if(sendQuery($sql1)) {
-			echo "<script>alert('User has been updated'); location.assign('index.php?loc=users');</script>";
-			}
-		
+function updateUser($uid, $ualias, $utype=null, $upwd=null) {
+		$sql1 = "update user set ";
+		$sql1 .= "alias='".$ualias."'";
+		if($utype != null) {
+			$sql1 .= ", type='".$utype."'";
 		}
+		if($upwd != null) {
+			$sql1 .= ", pwd=sha1('".$upwd."')";
+		}
+		$sql1 .= " where uid=".$uid;
+		echo $sql1;
+		
+		if(sendQuery($sql1)) {
+			if($_SESSION['logged'] == $ualias) {
+				echo "<script>alert('User has been updated'); location.assign('index.php?loc=panel&uid=".$uid."');</script>";
+			} else {
+				echo "<script>alert('User has been updated'); location.assign('logout.php?f=y');</script>";
+			}
+			
+			}
+		
 }
 function registerUser($alias, $pwd, $type) {
 	$sql = sprintf("insert into user(alias, pwd, lastonline, type) values('%s', sha1('%s'), CURRENT_TIMESTAMP, '%s')", $alias, $pwd, $type);
@@ -223,6 +231,16 @@ function createPost($title, $content) {
 
 function getUID($alias) {
 	$q = sendQuery("select uid from user where alias='$alias'");
+	$r = $q->fetch_row();
+	return $r[0];
+}
+function getAlias($uid) {
+	$q = sendQuery("select alias from user where uid='$uid'");
+	$r = $q->fetch_row();
+	return $r[0];
+}
+function getUType($uid) {
+	$q = sendQuery("select type from user where uid='$uid'");
 	$r = $q->fetch_row();
 	return $r[0];
 }
