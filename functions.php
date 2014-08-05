@@ -248,9 +248,9 @@ function getImage($uid) {
 		$sql  = "select mimetype, imageitself from image where owner = ".$uid;
 	 	$arr = sendQuery($sql);
 	 	$img = $arr->fetch_array();
-		if(empty($img)){ $result = "path/to/image/default.jpg"; } else { 
-		$result = "data:".$img['mimetype'].";base64,".base64_encode( $img['imageitself'] );
-	 	return $result;}
+		if(empty($img)){ $result = "‪‪C:\wamp\www\ccforum\default.jpg"; } else { 
+		$result = "data:".$img['mimetype'].";base64,".base64_encode( $img['imageitself'] );}
+	 	return $result;
 		
 }
 
