@@ -121,10 +121,7 @@ function showPost($pa, $pd) { // Display post and call showThread
 
 function showThread($pa, $pd) { //Recursive thread display.
 	$sql = sprintf("select * from post p join (select * from thread where authororg = %s and clockedorg = '%s') s on p.author = s.author and p.clocked = s.clocked", $pa, $pd);
-	$sql2 = ("select subject from post where author=".$pa." and clocked='".$pd."'");
-	$query = sendQuery($sql);
-	$query2 = sendQuery($sql2);
-	$subjectReply = $query2->fetch_object()->subject;
+		$query = sendQuery($sql);
 	$rowc = $query->num_rows;
 	if($rowc === 0) {
 		return;
@@ -135,7 +132,7 @@ function showThread($pa, $pd) { //Recursive thread display.
 										
 									
 										$uAlias = getAlias($row[0]);
-										$result .= sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s as a reply to: <b>%s</b><p>%s</p>", $row[3], $uAlias, date("jS F Y, H:i", strtotime($row[1])), $subjectReply, $row[2]);
+										$result .= sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s<p>%s</p>", $row[3], $uAlias, date("jS F Y, H:i", strtotime($row[1])), $row[2]);
 								if(isset($_SESSION['logged'])){
 									if(($uAlias == $_SESSION['logged'] && !$row[4]) || $_SESSION['type'] == 'A'){
 										
@@ -169,7 +166,7 @@ function replyPost($ra, $rt, $rc, $roa, $rod){ // Add reply to post, create post
 	
 	$userid = getUID($ra);
 	$timestamp = date('Y-m-d H:i:s');
-	$sql1 = sprintf("insert into post(author, clocked, content, subject) values(%s, '%s', '%s', '%s')", $userid, $timestamp, $rc, $rt);
+	$sql1 = sprintf("insert into post(author, clocked, content, subject) values(%s, '%s', '%s', '%s')", $userid, $timestamp,filter_var($rc, FILTER_SANITIZE_STRING), filter_var($rt, FILTER_SANITIZE_STRING));
 	$sql2 = sprintf("insert into thread values(%s, '%s', %s, '%s')", $roa, $rod, $userid, $timestamp);
 	$q2 = sendQuery($sql1);
 	$q3 = sendQuery($sql2);
@@ -180,7 +177,7 @@ function replyPost($ra, $rt, $rc, $roa, $rod){ // Add reply to post, create post
 }
 
 function editPost($pa, $pd, $pc, $pt) { // Updates the post, returns to index if successful
-	$sqlU = sprintf("update post set content='%s', subject='%s' where author=%s and clocked='%s'", $pc, $pt, $pa, $pd);
+	$sqlU = sprintf("update post set content='%s', subject='%s' where author=%s and clocked='%s'", filter_var($pc, FILTER_SANITIZE_STRING), filter_var($pt, FILTER_SANITIZE_STRING), $pa, $pd);
 	$result = sendQuery($sqlU);
 	if($result) {
     header("Location: index.php");
@@ -225,8 +222,8 @@ function updateUser($uid, $ualias, $utype=null, $upwd=null) {
 			}
 		
 }
-function registerUser($alias, $pwd, $type) {
-	$sql = sprintf("insert into user(alias, pwd, lastonline, type) values('%s', sha1('%s'), CURRENT_TIMESTAMP, '%s')", $alias, $pwd, $type);
+function registerUser($alias, $pwd) {
+	$sql = sprintf("insert into user(alias, pwd, lastonline) values('%s', sha1('%s'), CURRENT_TIMESTAMP)", $alias, $pwd);
 	if(sendQuery($sql)) {
 		echo "<script>alert('User has been registered. You can log in now.'); location.assign('index.php');</script>";
 	}
@@ -235,7 +232,7 @@ function registerUser($alias, $pwd, $type) {
 function createPost($title, $content) {
 	$timestamp = date('Y-m-d H:i:s');
 	$uid = getUID($_SESSION['logged']);
-	$sql = sprintf("insert into post(author, clocked, content, subject) values(%s, '%s', '%s', '%s')", $uid, $timestamp, $content, $title);
+	$sql = sprintf("insert into post(author, clocked, content, subject) values(%s, '%s', '%s', '%s')", $uid, $timestamp, filter_var($content, FILTER_SANITIZE_STRING), filter_var($title, FILTER_SANITIZE_STRING));
 		if(sendQuery($sql)) {
 		echo "<script>alert('Post added'); location.assign('index.php?loc=showpost&pa=$uid&pd=$timestamp');</script>";
 	}

@@ -7,7 +7,7 @@
 			<td>Type</td>
             <td>Last seen</td>
 			<td>Options</td>
-            <td>Image</td>
+            <td>Avatar</td>
 		</tr>
 	<?php
 		$list_query = sendQuery("SELECT uid, alias, type, lastonline FROM user"); // select data from databese! users are database 
@@ -17,6 +17,11 @@
 			$u_id = $run_list['uid'];
 			$u_uname = $run_list['alias'];
 			$u_type = $run_list['type'];
+			if($u_type == 'A') {
+				$u_type = 'Admin';
+			} else {
+				$u_type = 'User';
+			}
 			$u_lastonline = $run_list['lastonline'];
 	?>
 		<tr>
@@ -36,7 +41,7 @@
 				echo '<td>Log in to see the options</td>';
 				}
 			?>
-            <td><img src="crashImageView.php&pid=<?php echo $u_id;?>" alt="some text"/></td>
+            <td><img src="<?php echo getImage($u_id);?>" alt="some text" height="60px" width="60px"></td>
 		</tr>
 	<?php
 		} // close while and if
