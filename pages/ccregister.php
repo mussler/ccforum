@@ -24,6 +24,13 @@
 			<tr>
 				<td>Retype password :</td><td><input name="pwd2" type="password" size"20" required></input></td>
 			</tr>
+            <tr>
+            	<td><label for="file">Filename:</label></td>
+                <td><form action="upload_file.php" method="post" enctype="multipart/form-data">
+				<input type="file" name="file" id="file"><br>
+				<input type="submit" name="submit" value="Submit"></form>
+                </td>
+            </tr>
 
 		</table>
 		
@@ -42,4 +49,14 @@ if(isset($_POST['types']) && isset($_POST['alias']) && isset($_POST['regemail'])
 	echo '<script>alert("Some fields are missing!")</script>';
 }
 
+?>
+<?php
+	$file = $_FILES['file'];
+	$name = $file['name'];
+	$path = "/uploads/" . basename($name);
+if (move_uploaded_file($file['tmp_name'], $path)) {
+    // Move succeed.
+} else {
+    // Move failed. Possible duplicate?
+}
 ?>
