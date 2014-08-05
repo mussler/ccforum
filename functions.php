@@ -245,11 +245,14 @@ function getUType($uid) {
 	return $r[0];
 }
 function getImage($uid) {
+		if (($sql = "imageitself from image where owner = ".$uid) != "null") {
 		$sql  = "select mimetype, imageitself from image where owner = ".$uid;
 	 	$arr = sendQuery($sql);
 	 	$img = $arr->fetch_array();
 		$result = "data:".$img['mimetype'].";base64,".base64_encode( $img['imageitself'] );
-	 	return $result;
+	 	return $result;}
+		else
+		{return '<img src="default.png" alt="defaultpic">';}
 }
 
 function saveImage($img, $type, $userid) {

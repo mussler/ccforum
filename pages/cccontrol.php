@@ -35,7 +35,7 @@ if($alias == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
 <input type="file" name="browseimg" id="browseimg" accept="image/*" onchange="javascript:this.form.submit();">
 
       
-</form>
+</form> 
 
 <?php 
 

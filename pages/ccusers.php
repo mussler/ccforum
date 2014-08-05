@@ -3,7 +3,6 @@
 	<h3>LIST OF USERS</h3>
 	<table>
 		<tr>
-			<td>Avatar</td>
             <td width="150">User name</td>
 			<td>Type</td>
             <td>Last seen</td>
