@@ -102,6 +102,13 @@ display: block;"> </div>
 				goto defaultlabel;
 			}
 			break;
+			case 'deletepost':
+			if (isset($_GET['pa']) && isset($_GET['pd'])) {
+			include('pages/ccdeletepost.php');			
+			} else {
+				goto defaultlabel;
+			}
+			break;
 			case 'panel':
 				include('pages/cccontrol.php');
 			break;

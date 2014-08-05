@@ -5,8 +5,7 @@ $queryPostData = sendQuery($sqlGetPost);
 $rowc = $queryPostData->num_rows;
 if($rowc == 0) {
 	echo '<p>The post you are trying to reply to doesn\'t exist.</p>';
-} elseif(!canReply($_GET['pa'], $_GET['pd'], $_SESSION['logged'])){
-	echo '<p>You can only reply to the latest post in a thread</p>';
+
 }else {
 	$data = $queryPostData->fetch_row();
 	

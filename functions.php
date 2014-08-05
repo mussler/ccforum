@@ -46,66 +46,71 @@ function CheckCookieLogin() { // Check for cookie, refresh it if found and setup
 	
 }
 
-function canReply($opa, $opd, $paa) { // Check if it's possible to reply (post is last in thread)
-	$sql1 = "select uid from user where alias='".$paa."'";
-	$query1 = sendQuery($sql1);
-	$row1 = $query1->fetch_row();
-	$sql2 = sprintf("select * from thread where authororg=%s and clockedorg='%s' and author=%s", $opa, $opd, $row1[0]);
-	$query2 = sendQuery($sql2);
-	$rowc2 = $query2->num_rows;
-	if($rowc2 == 0) {
-		return true;
-	} else {
-		return false;
-	}
-	return false;
-	
-}
 
 function loadPosts() { // Displays posts, only first posts in thread
 	printf("<h2>Posts</h2>");
 	$sql = "SELECT p.author, p.clocked, p.content, p.subject from post p where not exists (select * from thread t where p.author = t.author and p.clocked = t.clocked)";
-	$sql2 = "select alias from user where uid=%s";
 	$query = sendQuery($sql);
 	printf("<ul>");
 	while($row = $query->fetch_row()) {
-		$s = sprintf($sql2, $row[0]);
-		$query2 = sendQuery($s);
-		$row2 = $query2->fetch_row();
-		printf("<li><h4><a href='index.php?loc=showpost&pa=%s&pd=%s'>%s</a></h4><span class='postauthor'><i>Posted by: </i><b>%s</b>.<br><i>Date added: </i><b>%s.</b></li>", $row[0],$row[1], $row[3], $row2[0], date("jS F Y, H:i", strtotime($row[1])) );
+		$s = getAlias($row[0]);;
+		printf("<li><h4><a href='index.php?loc=showpost&pa=%s&pd=%s'>%s</a></h4><span class='postauthor'><i>Posted by: </i><b>%s</b>.<br><i>Date added: </i><b>%s.</b></li>", $row[0],$row[1], $row[3], $s, date("jS F Y, H:i", strtotime($row[1])) );
 		
 	}
 	printf("</ul>");
 }
 
+function isTopic($pa, $pd) { //Returns true if the post is a Topic, false if not
+	$sql1 = "SELECT p.author, p.clocked, p.content, p.subject from post p where not exists (select * from thread t where p.author = t.author and p.clocked = t.clocked)";
+	$sql2 = "select author, clocked from (".$sql1.") z where z.author=".$pa." and z.clocked='".$pd."'";
+	$query = sendQuery($sql2);
+}
+
+function userPostDelete($pa, $pd){
+	if(isTopic($pa, $pd)) {
+		echo '<script>alert("You don\'t have permission to delete a topic!"); location.assign("index.php"); </script>';
+	} else {
+		if(sendQuery("update post set content='<i>Post deleted by user.</i>', udel=true where author=".$pa." and clocked='".$pd."'")) {
+			echo '<script>alert("Post deleted."); location.assign("index.php"); </script>';
+		}
+	}
+}
+
+function adminPostDelete($pa, $pd) {
+	if(sendQuery("delete from post where author=".$pa." and clocked='".$pd."'")) {
+			echo '<script>alert("Post deleted."); location.assign("index.php"); </script>';
+		}
+}
+
+
+
 function showPost($pa, $pd) { // Display post and call showThread
 	$sqlP = sprintf("select * from post where author=%s and clocked='%s'", $pa, $pd);
-	$sqlU = sprintf("select alias from user where uid=%s", $pa);
+	$uAlias = getAlias($pa);
 	$queryP = sendQuery($sqlP);
-	$queryU = sendQuery($sqlU);
 	$rowc = $queryP->num_rows;
 	if($rowc === 0) {
 		$result = 'The selected post doesn\'t exist';
 	} else {
 	$rowP = $queryP->fetch_row();
-	$rowU = $queryU->fetch_row();
-	$result = sprintf("<ul><li><h3>%s</h3> posted by <b>%s</b> on %s <p>%s</p>", $rowP[3], $rowU[0], date("jS F Y, H:i", strtotime($rowP[1])), $rowP[2]);
+	$result = sprintf("<ul><li><h3>%s</h3> posted by <b>%s</b> on %s <p>%s</p>", $rowP[3], $uAlias, date("jS F Y, H:i", strtotime($rowP[1])), $rowP[2]);
 	if(isset($_SESSION['logged'])){
-	if($rowU[0] == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
+	if($uAlias == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
 	$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $pa, $pd);
 	}
 	if($_SESSION['type']  == 'A') {
 	$result .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $pa, $pd);
 	}
+	if(isset($_SESSION['logged'])){
+		$result .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a>', $pa, $pd);
+		}
 	}
 	}
 	$result .= '</li>';
 	$resultT = showThread($pa, $pd);
 	if(empty($resultT) && $rowc != 0) {
 		$result .= '<p>No one replied to this post.</p>';
-		if(isset($_SESSION['logged'])){
-		$result .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a>', $pa, $pd);
-		}
+		
 	} else {
 		$result .= $resultT;
 	}
@@ -116,52 +121,60 @@ function showPost($pa, $pd) { // Display post and call showThread
 
 function showThread($pa, $pd) { //Recursive thread display.
 	$sql = sprintf("select * from post p join (select * from thread where authororg = %s and clockedorg = '%s') s on p.author = s.author and p.clocked = s.clocked", $pa, $pd);
+	$sql2 = ("select subject from post where author=".$pa." and clocked='".$pd."'");
 	$query = sendQuery($sql);
+	$query2 = sendQuery($sql2);
+	$subjectReply = $query2->fetch_object()->subject;
 	$rowc = $query->num_rows;
 	if($rowc === 0) {
 		return;
 	} else {
-		$row = $query->fetch_row();
-		$sqlU = sprintf("select alias from user where uid=%s", $row[0]);
-		$queryU = sendQuery($sqlU);
-		$rowU = $queryU->fetch_row();
-		$result = sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s <p>%s</p>", $row[3], $rowU[0], date("jS F Y, H:i", strtotime($row[1])), $row[2]);
-		if(isset($_SESSION['logged'])){
-		if($rowU[0] == $_SESSION['logged'] || $_SESSION['type'] == 'A'){
-	$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $row[0], $row[1]);
-	}
-	if($_SESSION['type']  == 'A') {
-	$result .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $row[0], $row[1]);
-	}
-		}
-	$result .= '</li>';
-	$resultT = showThread( $row[0], $row[1]);
-	if(empty($resultT)) {
-		if(isset($_SESSION['logged'])){
+		$result = '<ul>';
+
+								while($row = $query->fetch_row()) {
+										
+									
+										$uAlias = getAlias($row[0]);
+										$result .= sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s as a reply to: <b>%s</b><p>%s</p>", $row[3], $uAlias, date("jS F Y, H:i", strtotime($row[1])), $subjectReply, $row[2]);
+								if(isset($_SESSION['logged'])){
+									if(($uAlias == $_SESSION['logged'] && !$row[4]) || $_SESSION['type'] == 'A'){
+										
+										$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $row[0], $row[1]);
+										$result .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $row[0], $row[1]);
+										}
+		if(!$row[4]) {								
 		$result .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a>', $row[0], $row[1]);
 		}
-	} else {
-		$result .= $resultT;
+		}
+									
+										
+										$result .= showThread( $row[0], $row[1]);
+										$result .= '</li>';
+										}
 	}
+	
+		
+
+
+
+			$result .= '</ul>';
+
 	return $result;
 		
 	}
 	
-}
+
 
 function replyPost($ra, $rt, $rc, $roa, $rod){ // Add reply to post, create post and thread, returns to index if successful
-	if(canReply($roa, $rod, $ra)) {	
 	
-	$q1 = sendQuery("select uid from user where alias='".$ra."'");
-	$r1 = $q1->fetch_row();
+	$userid = getUID($ra);
 	$timestamp = date('Y-m-d H:i:s');
-	$sql1 = sprintf("insert into post values(%s, '%s', '%s', '%s')", $r1[0], $timestamp, $rc, $rt);
-	$sql2 = sprintf("insert into thread values(%s, '%s', %s, '%s')", $roa, $rod, $r1[0], $timestamp);
+	$sql1 = sprintf("insert into post(author, clocked, content, subject) values(%s, '%s', '%s', '%s')", $userid, $timestamp, $rc, $rt);
+	$sql2 = sprintf("insert into thread values(%s, '%s', %s, '%s')", $roa, $rod, $userid, $timestamp);
 	$q2 = sendQuery($sql1);
 	$q3 = sendQuery($sql2);
-	if($q1 && $q2 && $q3) {
+	if($q2 && $q3) {
 	header("Location: index.php");
-	}
 	}
 	
 }
@@ -201,10 +214,9 @@ function updateUser($uid, $ualias, $utype=null, $upwd=null) {
 			$sql1 .= ", pwd=sha1('".$upwd."')";
 		}
 		$sql1 .= " where uid=".$uid;
-		echo $sql1;
 		
 		if(sendQuery($sql1)) {
-			if($_SESSION['logged'] == $ualias) {
+			if($_SESSION['logged'] != $ualias) {
 				echo "<script>alert('User has been updated'); location.assign('index.php?loc=panel&uid=".$uid."');</script>";
 			} else {
 				echo "<script>alert('User has been updated'); location.assign('logout.php?f=y');</script>";
@@ -223,7 +235,7 @@ function registerUser($alias, $pwd, $type) {
 function createPost($title, $content) {
 	$timestamp = date('Y-m-d H:i:s');
 	$uid = getUID($_SESSION['logged']);
-	$sql = sprintf("insert into post values(%s, '%s', '%s', '%s')", $uid, $timestamp, $content, $title);
+	$sql = sprintf("insert into post(author, clocked, content, subject) values(%s, '%s', '%s', '%s')", $uid, $timestamp, $content, $title);
 		if(sendQuery($sql)) {
 		echo "<script>alert('Post added'); location.assign('index.php?loc=showpost&pa=$uid&pd=$timestamp');</script>";
 	}
@@ -248,6 +260,7 @@ function getImage($uid) {
 		$sql  = "select mimetype, imageitself from image where owner = ".$uid;
 	 	$arr = sendQuery($sql);
 	 	$img = $arr->fetch_array();
+		
 		$result = "data:".$img['mimetype'].";base64,".base64_encode( $img['imageitself'] );
 	 	return $result;
 }
