@@ -14,7 +14,7 @@ if(!isset($_SESSION['cookie']) && empty($_SESSION['logged'])) {
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
 
-<title>Crash Course - Message Board v0.23</title>
+<title>Crash Course - Message Board v0.3</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
 <script src="js.js"></script>
 </head>
