@@ -247,9 +247,25 @@ function getUType($uid) {
 function getImage($uid) {
 		$sql  = "select mimetype, imageitself from image where owner = ".$uid;
 	 	$arr = sendQuery($sql);
-	 	//$img = $dbh->fetch_array($arr);
-	 	//header("Content-type: " . $out['mimetype']);
-	 	//return $img['imageitself'];
+	 	$img = $arr->fetch_array();
+		$result = "data:".$img['mimetype'].";base64,".base64_encode( $img['imageitself'] );
+	 	return $result;
+}
+
+function saveImage($img, $type, $userid) {
+	$sql  = "  insert into image";
+  $sql .= " (mimetype, owner, imageitself) values ";
+  $sql .= sprintf("('%s','%s','%s')",
+    $type,
+    $userid,
+    $img);
+	$sql .= " on duplicate key update mimetype='".$type."', imageitself='".$img."'";
+  if(sendQuery($sql)) {
+	  return true;
+  } else {
+	  false;
+  }
+	
 }
 function sendQuery($query) { /* Executes query, catches errors, returns result, print erros if in debug mode (&debug) */
 try {

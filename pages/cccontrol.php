@@ -29,19 +29,25 @@ if($alias == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
 <h2>Control Panel</h2>
 <div id="panelimg"><img id="actualimg" src="<?php echo getImage($uid); ?>" alt="<?php echo "Avatar for $alias"; ?>">
 <?php if($canEdit): ?>
-<form id="imgchange" action="" method="POST">
+<form id="imgchange" action="" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="imguid" value="<?php echo $uid; ?>">
 <div id="imgbutton">Change Avatar</div>
-<input id="browseimg" name="img" type="file" onchange="javascript:this.form.submit();" accept="image/*">
+<input type="file" name="browseimg" id="browseimg" accept="image/*" onchange="javascript:this.form.submit();">
+
+      
 </form>
 
 <?php 
-if(isset($_POST['img']) && isset($_POST['imguid'])) {
-	//if(saveImage($_POST['imguid'], $_POST['img'])){
+
+if(isset($_FILES['browseimg']) && isset($_POST['imguid'])) {
+	$image = addslashes(file_get_contents($_FILES['browseimg']['tmp_name']));
+	$imguser = $uid;
+	$imgtype = $_FILES['browseimg']['type'];
+	if(saveImage($image, $imgtype, $imguser)){
 	$string = "<script>alert('Avatar changed');";
 	$string .="location.assign('index.php?loc=panel&uid=$uid');</script>";
 	echo $string;
-	//};
+	};
 } 
 
 
