@@ -36,13 +36,13 @@ create table image
 	(
 		id int primary key auto_increment,
 		imageitself blob not null,
-		owner varchar(16) not null unique,
+		owner int not null unique,
 		copyrightrestricted boolean default false,
 		caption varchar(64),
 		alttext varchar(16),
 		avatar blob,
 		mimetype varchar(32) not null,
-		foreign key(owner) references user(alias)
+		foreign key(owner) references user(uid)
 		);
 	create table has(
 		id int not null unique,

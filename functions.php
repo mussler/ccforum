@@ -244,6 +244,13 @@ function getUType($uid) {
 	$r = $q->fetch_row();
 	return $r[0];
 }
+function getImage($uid) {
+		$sql  = "select mimetype, imageitself from image where owner = ".$uid;
+	 	$arr = sendQuery($sql);
+	 	//$img = $dbh->fetch_array($arr);
+	 	//header("Content-type: " . $out['mimetype']);
+	 	//return $img['imageitself'];
+}
 function sendQuery($query) { /* Executes query, catches errors, returns result, print erros if in debug mode (&debug) */
 try {
 $mysqli = new mysqli(HOST,USER, UPWD, DBNAME);

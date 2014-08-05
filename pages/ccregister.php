@@ -1,11 +1,13 @@
 <?php include_once('functions.php'); ?>
 		<FORM class="form form2" ACTION="" METHOD="POST">
 			<h1>Welcome to the registration page</h1>
-			Please input the registration details to create an account here<br>
+            <p>
+			Please input the registration details to create an account here</p>
 	
 		<table>
 			<tr>
-				<td>User type :</td><td>
+				<td>User type :</td>
+                <td>
 				<select id="types" name="types">
       				<option value="A">Admin</option>
       				<option value="O">User</option>
@@ -26,21 +28,33 @@
 			</tr>
             <tr>
             	<td><label for="file">Filename:</label></td>
-                <td><form action="upload_file.php" method="post" enctype="multipart/form-data">
-				<input type="file" name="file" id="file"><br>
-				<input type="submit" name="submit" value="Submit"></form>
+                <td>
+				<input type="file" name="file" id="file" accept="image/*">
                 </td>
             </tr>
 
 		</table>
 		
 		<input type="submit" name="register" value="Register me!"></input>
-		</FORM>
+		</form>
+        <div class="clearfix"></div>
 <?php 
 if(isset($_POST['types']) && isset($_POST['alias']) && isset($_POST['regemail']) && isset($_POST['pwd']) && isset($_POST['pwd2']) ) {
 	if($_POST['pwd'] == $_POST['pwd2']){
 		
 	registerUser($_POST['alias'], $_POST['pwd'], $_POST['types']);
+		if(isset($_FILES['file'])) {
+				$file = $_FILES['file'];
+	$name = $file['name'];
+	$path = "/uploads/" . basename($name);
+if (move_uploaded_file($file['tmp_name'], $path)) {
+    // Move succeed.
+} else {
+    // Move failed. Possible duplicate?
+}
+			
+			
+		}
 		
 		} else {
 			echo '<script>alert("Passwords does not match")</script>';
@@ -49,14 +63,4 @@ if(isset($_POST['types']) && isset($_POST['alias']) && isset($_POST['regemail'])
 	echo '<script>alert("Some fields are missing!")</script>';
 }
 
-?>
-<?php
-	$file = $_FILES['file'];
-	$name = $file['name'];
-	$path = "/uploads/" . basename($name);
-if (move_uploaded_file($file['tmp_name'], $path)) {
-    // Move succeed.
-} else {
-    // Move failed. Possible duplicate?
-}
 ?>

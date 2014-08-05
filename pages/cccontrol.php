@@ -27,7 +27,7 @@ if($alias == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
 }
 ?>
 <h2>Control Panel</h2>
-<div id="panelimg"><img id="actualimg" src="<?php //echo getImage($uid); ?>" alt="<?php echo "Avatar for $alias"; ?>">
+<div id="panelimg"><img id="actualimg" src="<?php echo getImage($uid); ?>" alt="<?php echo "Avatar for $alias"; ?>">
 <?php if($canEdit): ?>
 <form id="imgchange" action="" method="POST">
 <input type="hidden" name="imguid" value="<?php echo $uid; ?>">
