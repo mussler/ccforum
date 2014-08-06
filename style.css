@@ -49,7 +49,9 @@ body {
 	margin: 10em auto;
 }
 a {
-	color: inherit;
+	color: orangered;
+text-decoration: none;
+font-weight: 600;
 }
 .pure-menu a {
 color: #FFFFFF !important;

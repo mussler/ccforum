@@ -54,7 +54,7 @@ function loadPosts() { // Displays posts, only first posts in thread
 	printf("<ul>");
 	while($row = $query->fetch_row()) {
 		$s = getAlias($row[0]);;
-		printf("<li><h4><a href='index.php?loc=showpost&pa=%s&pd=%s'>%s</a></h4><span class='postauthor'><i>Posted by: </i><b>%s</b>.<br><i>Date added: </i><b>%s.</b></li>", $row[0],$row[1], $row[3], $s, date("jS F Y, H:i", strtotime($row[1])) );
+		printf("<li><h4><a href='index.php?loc=showpost&pa=%s&pd=%s'>%s</a></h4><span class='postavatar' style='float: left'><img src='%s' width='60px' height='60px'></span><span class='postauthor' style='float: left; margin-left: 1em;'><i>Posted by: </i><b>%s</b>.<br><i>Date added: </i><b>%s.</b></li><div class='clearfix'></div>", $row[0],$row[1], $row[3], getImage($row[0]), $s, date("jS F Y, H:i", strtotime($row[1])) );
 		
 	}
 	printf("</ul>");
@@ -93,18 +93,30 @@ function showPost($pa, $pd) { // Display post and call showThread
 		$result = 'The selected post doesn\'t exist';
 	} else {
 	$rowP = $queryP->fetch_row();
-	$result = sprintf("<ul><li><h3>%s</h3> posted by <b>%s</b> on %s <p>%s</p>", $rowP[3], $uAlias, date("jS F Y, H:i", strtotime($rowP[1])), $rowP[2]);
+	$options = '';
+	
 	if(isset($_SESSION['logged'])){
 	if($uAlias == $_SESSION['logged'] || $_SESSION['type'] == 'A') {
-	$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $pa, $pd);
+	$options .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $pa, $pd);
 	}
 	if($_SESSION['type']  == 'A') {
-	$result .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $pa, $pd);
+	$options .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $pa, $pd);
 	}
 	if(isset($_SESSION['logged'])){
-		$result .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a>', $pa, $pd);
+		$options .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a></p>', $pa, $pd);
 		}
 	}
+	
+		
+	
+	$result = "<ul><li>";
+	$result .= sprintf("<h3>%s</h3>", $rowP[3]);
+	$result .= sprintf("<span style='float: left'><img src='%s' width='80px' height='80px'></span>", getImage($pa));
+	$result .= sprintf("<span style='float: left; margin-left: 1em'><p><i>Posted by: </i><b>%s</b>.</p><p><i>Posted on: </i><b>%s</b></p></span>", $uAlias, date("jS F Y, H:i", strtotime($rowP[1])));
+	$result .= sprintf("<span class='options' style='float: left; margin-left: 1em;'>%s</span><div class='clearfix'></div><p>%s</p>", $options ,$rowP[2]);
+	
+		
+	
 	}
 	$result .= '</li>';
 	$resultT = showThread($pa, $pd);
@@ -129,20 +141,25 @@ function showThread($pa, $pd) { //Recursive thread display.
 		$result = '<ul>';
 
 								while($row = $query->fetch_row()) {
+											$options = '';
+											$uAlias = getAlias($row[0]);
+											if(isset($_SESSION['logged'])){
+													if(($uAlias == $_SESSION['logged'] && !$row[4]) || $_SESSION['type'] == 'A'){
+															$options .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $row[0], $row[1]);
+															$options .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $row[0], $row[1]);
+														}
+													if(!$row[4]) {								
+															$options .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a></p>', $row[0], $row[1]);
+														}
+												}
+									$result .= "<li>";
+									$result .= sprintf("<h3>%s</h3>", $row[3]);
+									$result .= sprintf("<span style='float: left'><img src='%s' width='80px' height='80px'></span>", getImage($pa));
+									$result .= sprintf("<span style='float: left; margin-left: 1em'><p><i>Posted by: </i><b>%s</b>.</p><p><i>Posted on: </i><b>%s</b></p></span>", $uAlias, date("jS F Y, H:i", strtotime($row[1])));
+									$result .= sprintf("<span class='options' style='float: left; margin-left: 1em;'>%s</span><div class='clearfix'></div><p>%s</p>", $options ,$row[2]);
 										
-									
-										$uAlias = getAlias($row[0]);
-										$result .= sprintf("<li><h4>%s</h4> posted by <b>%s</b> on %s<p>%s</p>", $row[3], $uAlias, date("jS F Y, H:i", strtotime($row[1])), $row[2]);
-								if(isset($_SESSION['logged'])){
-									if(($uAlias == $_SESSION['logged'] && !$row[4]) || $_SESSION['type'] == 'A'){
-										
-										$result .= sprintf("<p><a href='index.php?loc=editpost&pa=%s&pd=%s'>Edit Post</a></p>", $row[0], $row[1]);
-										$result .= sprintf("<p><a href='index.php?loc=deletepost&pa=%s&pd=%s'>Delete Post</a></p>", $row[0], $row[1]);
-										}
-		if(!$row[4]) {								
-		$result .= sprintf('<p><a href="index.php?loc=reply&pa=%s&pd=%s">Write a Reply</a>', $row[0], $row[1]);
-		}
-		}
+
+								
 									
 										
 										$result .= showThread( $row[0], $row[1]);

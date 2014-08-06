@@ -13,6 +13,7 @@ $(document).ready(function(e) {
 		   	   if(data == 'true') {
 			 location.reload();
 			   } else {
+				   console.log(data);
 				   $(".red").remove();
 				   $("<p class='red'>Incorrect login or password</p>").insertAfter("#loginform");
 				   $("#loginform > input[type=submit]").removeAttr('disabled');
