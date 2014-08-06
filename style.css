@@ -30,25 +30,33 @@ html, button, input, select, textarea {
 }
 body {
 	font: 600 12px/14px "qs", Verdana, sans-serif;
-	background-color: #CCC;
-	background: url('bg.jpg');
-	background-size: cover;
 
+
+}
+#bgimg {
+	position: fixed;
+	left: -20%;
+	top: -20%;
+		background: url('bg.jpg');
+		background-size: cover;
+
+	width: 200%;
+	height: 200%;
+	z-index: -1;
 }
 #wrapper {
 	width: 960px;
-	margin: 0 auto;
+	margin: 10em auto;
 }
 a {
 	color: inherit;
 }
 .pure-menu a {
-	color: #FFC50F !important;
-background: rgba(0, 0, 0, 0.48);
+color: #FFFFFF !important;
+background: #ff6633;
 border-radius: 12px;
 font-weight: 600;
 text-shadow: 9px 2px 18px rgba(238, 38, 38, 1);
-text-outline: 2px 2px #ff0000;
 -webkit-box-shadow: 0 8px 6px -6px black;
 -moz-box-shadow: 0 8px 6px -6px black;
 box-shadow: 0 8px 6px -6px black;
@@ -97,7 +105,16 @@ left: calc(100% - 20em);
 width: auto;
 height: auto;
 border-radius: 15px;
-background: #ff9c68;
+background: #ff6633;
+color: white;
+}
+
+#imglogo {
+	margin: 2em auto;
+display: block;
+position: fixed;
+left: 20px;
+top: 0;
 }
 
 .form input[type="text"], .form input[type="password"], .form input[type="email"] {
@@ -127,6 +144,9 @@ background: #ff9c68;
 	border-radius: 12px;
 margin: 0.1em 0.6em;
 	float: left;
+	background: #8B0000 !important;
+border: none;
+color: white;
 }
 .form2 {
 	float: left;
@@ -136,6 +156,7 @@ margin: 0.1em 0.6em;
 	clear: both;
 	display: block;
 	width: auto !important;
+	
 }
 .form2 textarea {
 	float: left;
@@ -164,9 +185,10 @@ margin: 0.4em;
 	color: #f25a43;
 }
 .form2 input, .form2 select, .form2 textarea {
-	background-color: #afc3c1;
+background: #8B0000 !important;
+border: none;
+color: white;
 }
-
 
 .clearfix {
 	clear: both;
@@ -174,6 +196,7 @@ margin: 0.4em;
 
 .pure-menu.pure-menu-open, .pure-menu.pure-menu-horizontal li .pure-menu-children {
 	background: none !important;
+	margin-bottom: 1em;
 }
 .pure-menu li a:hover {
 	border-radius: 12px;
@@ -214,7 +237,7 @@ left: 0;
 right: 0;
 cursor: pointer;
 border-radius: 12px;
-background-color: #afc3c1;
+background-color: #8B0000 !important;
 color: white;
 	 -webkit-transition: all 0.2s ease;
      -moz-transition: all 0.2s ease;
@@ -257,4 +280,62 @@ left: 0;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    white;
+}
+
+.rotating {
+  -webkit-animation: rotating-function 10.25s linear infinite;
+     -moz-animation: rotating-function 10.25s linear infinite;
+      -ms-animation: rotating-function 10.25s linear infinite;
+       -o-animation: rotating-function 10.25s linear infinite;
+          animation: rotating-function 10.25s linear infinite;
+		  overflow: visible;
+		  
+}
+
+@-webkit-keyframes rotating-function {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  50% {
+    -webkit-transform: rotate(2deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+  }
+}
+
+@-moz-keyframes rotating-function {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(60deg);
+  }
+}
+
+@-ms-keyframes rotating-function {
+  from {
+    -ms-transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(60deg);
+  }
+}
+
+@-o-keyframes rotating-function {
+  from {
+    -o-transform: rotate(0deg);
+  }
+  to {
+    -o-transform: rotate(60deg);
+  }
+}
+
+@keyframes rotating-function {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(60deg);
+  }
 }

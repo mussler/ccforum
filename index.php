@@ -19,9 +19,12 @@ if(!isset($_SESSION['cookie']) && empty($_SESSION['logged'])) {
 <script src="js.js"></script>
 </head>
 <body>
+
+<div id="bgimg" class="rotating"></div>
+
 <div id="wrapper">
   <header>
-    <div id="logo"> <img src="logo.png" style="margin: 2em auto;
+    <div id="logo"> <img id="imglogo" src="logo.png" style="margin: 2em auto;
 display: block;"> </div>
     <nav>
       <div class="pure-menu pure-menu-open pure-menu-horizontal">
