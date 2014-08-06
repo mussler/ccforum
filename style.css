@@ -40,8 +40,8 @@ body {
 		background: url('bg.jpg');
 		background-size: cover;
 
-	width: 200%;
-	height: 200%;
+	width: 130%;
+	height: 130%;
 	z-index: -1;
 }
 #wrapper {
@@ -99,14 +99,23 @@ td {
 
 /* Login Box */
 #logbox {
-	position: fixed;
+position: fixed;
 top: 1em;
 left: calc(100% - 20em);
 width: auto;
 height: auto;
-border-radius: 15px;
+
+color: #FFFFFF !important;
 background: #ff6633;
-color: white;
+border-radius: 12px;
+font-weight: 600;
+text-shadow: 9px 2px 18px rgba(238, 38, 38, 1);
+-webkit-box-shadow: 0 8px 6px -6px black;
+-moz-box-shadow: 0 8px 6px -6px black;
+box-shadow: 0 8px 6px -6px black;
+}
+.pure-menu ul {
+	float: right;
 }
 
 #imglogo {
@@ -115,6 +124,8 @@ display: block;
 position: fixed;
 left: 20px;
 top: 0;
+width: 20%;
+z-index: -1;
 }
 
 .form input[type="text"], .form input[type="password"], .form input[type="email"] {
@@ -305,37 +316,49 @@ left: 0;
 }
 
 @-moz-keyframes rotating-function {
-  from {
-    -moz-transform: rotate(0deg);
+  0% {
+    -webkit-transform: rotate(0deg);
   }
-  to {
-    -moz-transform: rotate(60deg);
+  50% {
+    -webkit-transform: rotate(2deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
   }
 }
 
 @-ms-keyframes rotating-function {
-  from {
-    -ms-transform: rotate(0deg);
+  0% {
+    -webkit-transform: rotate(0deg);
   }
-  to {
-    -ms-transform: rotate(60deg);
+  50% {
+    -webkit-transform: rotate(2deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
   }
 }
 
 @-o-keyframes rotating-function {
-  from {
-    -o-transform: rotate(0deg);
+  0% {
+    -webkit-transform: rotate(0deg);
   }
-  to {
-    -o-transform: rotate(60deg);
+  50% {
+    -webkit-transform: rotate(2deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
   }
 }
 
 @keyframes rotating-function {
-  from {
-    transform: rotate(0deg);
+  0% {
+    -webkit-transform: rotate(0deg);
   }
-  to {
-    transform: rotate(60deg);
+  50% {
+    -webkit-transform: rotate(2deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
   }
 }

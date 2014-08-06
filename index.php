@@ -44,6 +44,7 @@ display: block;"> </div>
           <li><a href="index.php?loc=users">List of Users</a></li>
           <?php endif; ?>
         </ul>
+        <div class="clearfix"></div>
       </div>
       <article id="logbox">
         <?php 
