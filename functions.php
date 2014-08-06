@@ -154,7 +154,7 @@ function showThread($pa, $pd) { //Recursive thread display.
 												}
 									$result .= "<li>";
 									$result .= sprintf("<h3>%s</h3>", $row[3]);
-									$result .= sprintf("<span style='float: left'><img src='%s' width='80px' height='80px'></span>", getImage($pa));
+									$result .= sprintf("<span style='float: left'><img src='%s' width='80px' height='80px'></span>", getImage($row[0]));
 									$result .= sprintf("<span style='float: left; margin-left: 1em'><p><i>Posted by: </i><b>%s</b>.</p><p><i>Posted on: </i><b>%s</b></p></span>", $uAlias, date("jS F Y, H:i", strtotime($row[1])));
 									$result .= sprintf("<span class='options' style='float: left; margin-left: 1em;'>%s</span><div class='clearfix'></div><p>%s</p>", $options ,$row[2]);
 										

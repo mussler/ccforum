@@ -21,6 +21,10 @@
     font-style: normal;
 
 }
+html, body {
+	width: 100%;
+	height: 100%;
+}
 html, button, input, select, textarea {
 	font-family: "open" !important;
 }
@@ -34,6 +38,7 @@ body {
 
 }
 #bgimg {
+	float: left;
 	position: fixed;
 	left: -20%;
 	top: -20%;
@@ -46,7 +51,8 @@ body {
 }
 #wrapper {
 	width: 960px;
-	margin: 10em auto;
+	margin: 0 auto;
+	padding-top: 7em;
 }
 a {
 	color: orangered;
@@ -301,8 +307,7 @@ left: 0;
       -ms-animation: rotating-function 10.25s linear infinite;
        -o-animation: rotating-function 10.25s linear infinite;
           animation: rotating-function 10.25s linear infinite;
-		  overflow: visible;
-		  
+		   
 }
 
 @-webkit-keyframes rotating-function {

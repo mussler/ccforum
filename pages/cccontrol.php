@@ -1,4 +1,5 @@
 <?php 
+ob_start();
 include_once('functions.php');
 if(isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
@@ -132,5 +133,5 @@ if(isset($_POST['deleteuser']) && isset($_POST['token'])) {
 	
 
 
-
+ob_end_flush();
 ?>

@@ -18,9 +18,10 @@ if(!isset($_SESSION['cookie']) && empty($_SESSION['logged'])) {
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
 <script src="js.js"></script>
 </head>
+<div id="bgimg" class="rotating"></div>
 <body>
 
-<div id="bgimg" class="rotating"></div>
+
 
 <div id="wrapper">
   <header>
