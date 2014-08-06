@@ -29,24 +29,41 @@ html, button, input, select, textarea {
 
 }
 body {
-	/*background-color: #afc3c1;*/
 	font: 600 12px/14px "qs", Verdana, sans-serif;
-		background-color: #CCC;
+	background-color: #CCC;
+	background: url('bg.jpg');
+	background-size: cover;
 
 }
 #wrapper {
 	width: 960px;
 	margin: 0 auto;
 }
+a {
+	color: inherit;
+}
+.pure-menu a {
+	color: #FFC50F !important;
+background: rgba(0, 0, 0, 0.48);
+border-radius: 12px;
+font-weight: 600;
+text-shadow: 9px 2px 18px rgba(238, 38, 38, 1);
+text-outline: 2px 2px #ff0000;
+-webkit-box-shadow: 0 8px 6px -6px black;
+-moz-box-shadow: 0 8px 6px -6px black;
+box-shadow: 0 8px 6px -6px black;
+}
+.pure-menu li a:hover, .pure-menu li a:focus {
+background: #8B0000 !important;
+}
 #phpdiv {
 	border: 2px black solid;
 	border-radius: 15px;
 	width: calc(100% - 2em);
 	min-height: 350px;
-	color: #999;
+	background: rgba(255,255,255,.5);
 	font: 400 12px/14px 'open';
-	background: #FFF;
-	padding: 15px;
+   padding: 15px;
 }
 code {
 	font: 600 14px/16px monotype;
