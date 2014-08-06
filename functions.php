@@ -275,7 +275,7 @@ function getImage($uid) {
 	 	$arr = sendQuery($sql);
 	 	$img = $arr->fetch_array();
 		if(empty($img)){ 
-		$result = "default.jpg"; 
+		$result = "default.png"; 
 		} else { 
 		$result = "data:".$img['mimetype'].";base64,".base64_encode( $img['imageitself'] );
 		}
